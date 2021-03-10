@@ -6,10 +6,11 @@ RUN yum install -y --disableplugin=subscription-manager --nodocs nginx \
   && yum clean all
 
 ADD index.html /usr/share/nginx/html
-USER 0
-CMD hostname -i > /usr/share/nginx/html/index.html
 ADD nginxconf.sed /tmp/
 RUN sed -i -f /tmp/nginxconf.sed /etc/nginx/nginx.conf
+USER root
+RUN /usr/bin/hostname -I > /usr/share/nginx/html/index.html
+
 
 RUN touch /run/nginx.pid \
   && chgrp -R 0 /var/log/nginx /run/nginx.pid \
